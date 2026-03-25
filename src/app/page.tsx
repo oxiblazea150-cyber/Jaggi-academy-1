@@ -4,6 +4,9 @@ import Navbar from '@/components/Navbar';
 import ScrollReveal from '@/components/ScrollReveal';
 import { GraduationCap, Trophy, Lightbulb, HeartHandshake, User, MapPin, Phone, MessageCircle, ArrowRight } from 'lucide-react';
 
+// ISR: regenerate page at most once per hour — serves static HTML otherwise (near-zero credits)
+export const revalidate = 3600;
+
 export const metadata = {
   title: 'Jaggi Academy — IIT, NEET & Board Excellence',
   description: 'Elite coaching for JEE, NEET, Class 11 & 12 by Dr. Harjeet Singh Jaggi. Proven results, expert faculty, personal attention.',
