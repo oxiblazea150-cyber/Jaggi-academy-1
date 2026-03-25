@@ -147,7 +147,7 @@ export default async function Home() {
             ) : (
               <div className="img-placeholder rounded-2xl aspect-[4/5]" style={{ boxShadow: '0 32px 80px rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)' }}>
                 <div className="w-16 h-16 rounded-full bg-white/10 mb-4 border border-white/20 flex items-center justify-center text-white/50"><User size={28} /></div>
-                <p className="text-white/60 text-sm font-medium">[Upload Jaggi Sir portrait<br />in Admin → Site Photos]</p>
+                <p className="text-white/60 text-sm font-medium">Portrait coming soon</p>
               </div>
             )}
             <div className="absolute -bottom-4 -left-6 rounded-2xl px-5 py-4 shadow-xl" style={{ background: 'var(--amber)', color: 'white' }}>
@@ -206,7 +206,7 @@ export default async function Home() {
               ) : (
                 <div className="img-placeholder rounded-2xl aspect-square max-w-sm mx-auto" style={{ boxShadow: '0 24px 64px rgba(26,58,107,0.1)' }}>
                   <div className="w-20 h-20 rounded-full bg-slate-200 mb-4 flex items-center justify-center text-[var(--muted)]"><User size={36} /></div>
-                  <p className="text-sm text-[var(--muted)]">[Upload portrait in Admin → Site Photos]</p>
+                  <p className="text-sm text-[var(--muted)]">Portrait coming soon</p>
                 </div>
               )}
               <div className="absolute top-4 -right-4 w-20 h-20 rounded-full flex flex-col items-center justify-center text-center text-white shadow-lg" style={{ background: 'var(--cobalt)' }}>
@@ -237,7 +237,7 @@ export default async function Home() {
                   ) : (
                     <div className="img-placeholder rounded-xl aspect-square mb-5 w-full">
                       <div className="mb-3 text-[var(--muted)]"><User size={40} strokeWidth={1.5} /></div>
-                      <span className="text-xs">[Upload in Admin → Site Photos]</span>
+                      <span className="text-xs">Photo coming soon</span>
                     </div>
                   )}
                   <div className={`inline-block px-3 py-1 rounded-full text-xs font-bold mb-2 self-start ${badge}`}>{subject}</div>
@@ -310,7 +310,7 @@ export default async function Home() {
                     ) : (
                       <div className="img-placeholder h-52">
                         <div className="mb-3 text-white/50"><GraduationCap size={44} strokeWidth={1.5} /></div>
-                        <span className="text-xs">[Upload photo in Admin → Wall of Fame]</span>
+                        <span className="text-xs">Photo coming soon</span>
                       </div>
                     )}
                     <div className="p-5 relative">
@@ -425,7 +425,7 @@ export default async function Home() {
         </div>
         <div className="border-t pt-8 flex flex-col sm:flex-row items-center justify-between gap-3" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
           <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>© 2026 Jaggi Academy. All rights reserved.</p>
-          <a href="/admin/login" className="text-xs opacity-30 hover:opacity-60 transition-opacity" style={{ color: 'rgba(255,255,255,0.5)' }}>Admin Login</a>
+          <span className="text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>Built with ❤️</span>
         </div>
       </footer>
 
