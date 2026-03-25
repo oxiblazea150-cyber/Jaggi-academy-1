@@ -28,32 +28,32 @@ export default function AdminLogin() {
 
     return (
         <div className="flex items-center justify-center min-h-[80vh]">
-            <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md border border-slate-200">
-                <h2 className="text-2xl font-bold text-center mb-6 text-[var(--color-text-main)]">Admin Login</h2>
-                {error && <div className="bg-red-50 text-[var(--color-accent-red)] p-3 rounded mb-4 text-center">{error}</div>}
+            <div className="bg-white p-8 rounded-2xl shadow-sm w-full max-w-md border border-slate-200">
+                <h2 className="text-2xl font-bold text-center mb-6 text-slate-800">Admin Login</h2>
+                {error && <div className="bg-red-50 text-red-700 p-3 rounded-lg border border-red-100 mb-4 text-center text-sm font-medium">{error}</div>}
                 <form onSubmit={handleLogin} className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium mb-1">Username</label>
+                        <label className="block text-sm font-semibold text-slate-600 mb-1">Username</label>
                         <input
                             type="text"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-[var(--color-primary)] text-slate-900 outline-none"
+                            className="w-full px-4 py-2 border border-slate-200 bg-slate-50 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-blue-600 focus:bg-white text-slate-900 outline-none transition-colors"
                             required
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium mb-1">Password</label>
+                        <label className="block text-sm font-semibold text-slate-600 mb-1">Password</label>
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-[var(--color-primary)] text-slate-900 outline-none"
+                            className="w-full px-4 py-2 border border-slate-200 bg-slate-50 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-blue-600 focus:bg-white text-slate-900 outline-none transition-colors"
                             required
                         />
                     </div>
-                    <button type="submit" className="w-full bg-[var(--color-primary)] text-white py-2 rounded-md hover:bg-[var(--color-primary-dark)] font-medium">
-                        Login
+                    <button type="submit" className="w-full bg-blue-700 text-white py-2.5 rounded-lg hover:bg-blue-800 font-semibold mt-2 transition-colors">
+                        Enter Admin
                     </button>
                 </form>
             </div>
