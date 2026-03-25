@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Admin {
+  id           String   @id @default(uuid())
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+model WallOfFame {
+  id               String   @id @default(uuid())
+  studentName      String
+  examName         String
+  rank             String
+  photoPlaceholder String?
+  createdAt        DateTime @default(now())
+}
+
+model TimetableEntry {
+  id        String   @id @default(uuid())
+  category  String
+  subject   String
+  day       String
+  timeStr   String
+  createdAt DateTime @default(now())
+}
