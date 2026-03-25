@@ -5,20 +5,20 @@ import db from '@/lib/db';
 export async function GET(req: NextRequest) {
     const key = req.nextUrl.searchParams.get('key');
     if (key) {
-        const row = db.prepare('SELECT * FROM SiteMedia WHERE key = ?').get(key);
-        return NextResponse.json(row || null);
+        const rows = await db`SELECT * FROM "SiteMedia" WHERE key = ${key}`;
+        return NextResponse.json(rows.length ? rows[0] : null);
     }
-    const rows = db.prepare('SELECT * FROM SiteMedia ORDER BY key').all();
+    const rows = await db`SELECT * FROM "SiteMedia" ORDER BY key`;
     return NextResponse.json(rows);
 }
 
 // POST — upsert a media key
 export async function POST(req: NextRequest) {
     const { key, imageUrl, label } = await req.json();
-    db.prepare(`
-    INSERT INTO SiteMedia (key, imageUrl, label, updatedAt)
-    VALUES (?, ?, ?, datetime('now'))
-    ON CONFLICT(key) DO UPDATE SET imageUrl=excluded.imageUrl, label=excluded.label, updatedAt=excluded.updatedAt
-  `).run(key, imageUrl, label || key);
+    await db`
+      INSERT INTO "SiteMedia" (key, "imageUrl", label, "updatedAt")
+      VALUES (${key}, ${imageUrl}, ${label || key}, NOW())
+      ON CONFLICT(key) DO UPDATE SET "imageUrl"=EXCLUDED."imageUrl", label=EXCLUDED.label, "updatedAt"=EXCLUDED."updatedAt"
+    `;
     return NextResponse.json({ success: true });
 }

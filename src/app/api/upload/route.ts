@@ -1,12 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
+import { v2 as cloudinary } from 'cloudinary';
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export async function POST(req: NextRequest) {
     try {
         const formData = await req.formData();
         const file = formData.get('file') as File;
-        const folder = (formData.get('folder') as string) || 'uploads';
+        const folder = (formData.get('folder') as string) || 'jaggi-academy';
 
         if (!file || !file.size) {
             return NextResponse.json({ error: 'No file provided' }, { status: 400 });
@@ -18,17 +23,15 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Only JPG, PNG, WEBP allowed' }, { status: 400 });
         }
 
-        const ext = file.name.split('.').pop();
-        const safeName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-        const uploadDir = path.join(process.cwd(), 'public', folder);
-
-        await mkdir(uploadDir, { recursive: true });
-
         const bytes = await file.arrayBuffer();
-        await writeFile(path.join(uploadDir, safeName), Buffer.from(bytes));
+        const base64Data = Buffer.from(bytes).toString('base64');
+        const fileUri = `data:${file.type};base64,${base64Data}`;
 
-        const url = `/${folder}/${safeName}`;
-        return NextResponse.json({ url, name: safeName });
+        const uploadResult = await cloudinary.uploader.upload(fileUri, {
+            folder: folder,
+        });
+
+        return NextResponse.json({ url: uploadResult.secure_url, name: uploadResult.public_id });
     } catch (e) {
         console.error('Upload error:', e);
         return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
