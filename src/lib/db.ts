@@ -1,13 +1,25 @@
 import { neon } from '@neondatabase/serverless';
 
-const db = neon(process.env.DATABASE_URL!);
+let _db: ReturnType<typeof neon> | null = null;
+
+export function getDb() {
+  if (!_db) {
+    const url = process.env.DATABASE_URL;
+    if (!url) {
+      throw new Error('DATABASE_URL is not set');
+    }
+    _db = neon(url);
+  }
+  return _db;
+}
 
 // Tracks whether DB tables have been initialised in this process
 let dbReady = false;
 
 export async function ensureDb() {
   if (dbReady) return;
-  dbReady = true; // optimistically set to avoid re-entrant calls
+  dbReady = true;
+  const db = getDb();
   try {
     await db`
       CREATE TABLE IF NOT EXISTS "WallOfFame" (
@@ -39,9 +51,7 @@ export async function ensureDb() {
       );
     `;
   } catch (e) {
-    dbReady = false; // reset so next request retries
+    dbReady = false;
     throw e;
   }
 }
-
-export default db;

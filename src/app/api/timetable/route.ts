@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
-import db, { ensureDb } from '@/lib/db';
+import { getDb, ensureDb } from '@/lib/db';
 import { randomUUID } from 'crypto';
 
 export async function GET() {
     try {
         await ensureDb();
+        const db = getDb();
         const rows = await db`SELECT * FROM "TimetableEntry" ORDER BY "createdAt" ASC`;
         return NextResponse.json(rows);
     } catch (e) {
@@ -16,6 +17,7 @@ export async function GET() {
 export async function POST(req: Request) {
     try {
         await ensureDb();
+        const db = getDb();
         const body = await req.json();
         const id = randomUUID();
         await db`
@@ -32,6 +34,7 @@ export async function POST(req: Request) {
 export async function DELETE(req: Request) {
     try {
         await ensureDb();
+        const db = getDb();
         const { id } = await req.json();
         await db`DELETE FROM "TimetableEntry" WHERE id = ${id}`;
         return NextResponse.json({ success: true });

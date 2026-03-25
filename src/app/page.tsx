@@ -1,4 +1,4 @@
-import db from '@/lib/db';
+import { getDb } from '@/lib/db';
 import TimetableTabs from '@/components/TimetableTabs';
 import Navbar from '@/components/Navbar';
 import ScrollReveal from '@/components/ScrollReveal';
@@ -98,9 +98,10 @@ export default async function Home() {
   let timetable: any[] = [];
   let siteMedia: Record<string, string> = {};
   try {
-    wallOfFame = await db`SELECT * FROM "WallOfFame" ORDER BY "createdAt" DESC`;
-    timetable = await db`SELECT * FROM "TimetableEntry" ORDER BY "createdAt" ASC`;
-    const mediaRows = await db`SELECT key, "imageUrl" FROM "SiteMedia"`;
+    const db = getDb();
+    wallOfFame = (await db`SELECT * FROM "WallOfFame" ORDER BY "createdAt" DESC`) as any[];
+    timetable = (await db`SELECT * FROM "TimetableEntry" ORDER BY "createdAt" ASC`) as any[];
+    const mediaRows = (await db`SELECT key, "imageUrl" FROM "SiteMedia"`) as any[];
     mediaRows.forEach(({ key, imageUrl }: any) => { siteMedia[key] = imageUrl; });
   } catch (e) {
     console.warn('DB not ready:', e);
