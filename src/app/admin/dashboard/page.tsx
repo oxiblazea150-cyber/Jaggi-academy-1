@@ -111,6 +111,7 @@ export default function AdminDashboard() {
     const [time, setTime] = useState<TimeEntry[]>([]);
     const [media, setMedia] = useState<Record<string, string>>({});
     const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState('');
     const [newWall, setNewWall] = useState(EMPTY_WALL);
     const [newWallImg, setNewWallImg] = useState('');
     const [newTime, setNewTime] = useState(EMPTY_TIME);
@@ -119,42 +120,67 @@ export default function AdminDashboard() {
     const router = useRouter();
 
     const load = useCallback(async () => {
-        const [w, t, m] = await Promise.all([
-            fetch('/api/wall-of-fame'),
-            fetch('/api/timetable'),
-            fetch('/api/media'),
-        ]);
-        if (w.status === 401) { router.push('/admin/login'); return; }
-        setWall(await w.json());
-        setTime(await t.json());
-        const mediaArr: MediaEntry[] = await m.json();
-        const map: Record<string, string> = {};
-        mediaArr.forEach(({ key, imageUrl }) => { map[key] = imageUrl; });
-        setMedia(map);
-        setLoading(false);
+        setLoadError('');
+        try {
+            const [w, t, m] = await Promise.all([
+                fetch('/api/wall-of-fame'),
+                fetch('/api/timetable'),
+                fetch('/api/media'),
+            ]);
+            if (w.status === 401 || t.status === 401 || m.status === 401) {
+                router.push('/admin/login');
+                return;
+            }
+            const [wallData, timeData, mediaData] = await Promise.all([
+                w.ok ? w.json() : [],
+                t.ok ? t.json() : [],
+                m.ok ? m.json() : [],
+            ]);
+            setWall(Array.isArray(wallData) ? wallData : []);
+            setTime(Array.isArray(timeData) ? timeData : []);
+            const map: Record<string, string> = {};
+            if (Array.isArray(mediaData)) {
+                (mediaData as MediaEntry[]).forEach(({ key, imageUrl }) => { map[key] = imageUrl; });
+            }
+            setMedia(map);
+        } catch (err) {
+            setLoadError('Could not connect to the database. Please refresh the page.');
+            console.error('Dashboard load error:', err);
+        } finally {
+            setLoading(false);
+        }
     }, [router]);
 
     useEffect(() => { load(); }, [load]);
 
+    async function logout() {
+        document.cookie = 'admin_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        router.push('/admin/login');
+    }
+
     async function saveMedia(key: string, imageUrl: string, label: string) {
-        await fetch('/api/media', {
+        const res = await fetch('/api/media', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ key, imageUrl, label }),
         });
-        setMedia(prev => ({ ...prev, [key]: imageUrl }));
+        if (res.ok) {
+            setMedia(prev => ({ ...prev, [key]: imageUrl }));
+        }
     }
 
     async function addWall(e: React.FormEvent) {
         e.preventDefault();
         setSaving(true);
-        await fetch('/api/wall-of-fame', {
+        const res = await fetch('/api/wall-of-fame', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ...newWall, imageUrl: newWallImg }),
         });
-        setNewWall(EMPTY_WALL);
-        setNewWallImg('');
+        if (res.ok) {
+            setNewWall(EMPTY_WALL);
+            setNewWallImg('');
+        }
         await load();
         setSaving(false);
     }
@@ -168,12 +194,14 @@ export default function AdminDashboard() {
     async function addTime(e: React.FormEvent) {
         e.preventDefault();
         setSaving(true);
-        await fetch('/api/timetable', {
+        const res = await fetch('/api/timetable', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(newTime),
         });
-        setNewTime(EMPTY_TIME);
+        if (res.ok) {
+            setNewTime(EMPTY_TIME);
+        }
         await load();
         setSaving(false);
     }
@@ -200,14 +228,28 @@ export default function AdminDashboard() {
 
     return (
         <div className="max-w-5xl mx-auto p-4 sm:p-8 space-y-8">
+            {/* Error Banner */}
+            {loadError && (
+                <div className="rounded-xl bg-red-50 border border-red-200 px-5 py-4 flex items-center gap-3">
+                    <span className="text-red-500 text-lg">⚠️</span>
+                    <div className="flex-grow">
+                        <p className="text-sm font-semibold text-red-700">{loadError}</p>
+                    </div>
+                    <button onClick={load} className="text-xs font-semibold text-red-700 hover:underline shrink-0">Retry</button>
+                </div>
+            )}
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-800">Admin Dashboard</h1>
                     <p className="text-sm text-slate-500 mt-1">Manage your Wall of Fame, class schedules, and all site photos.</p>
                 </div>
-                <a href="/" target="_blank" rel="noreferrer" className="text-sm font-medium text-blue-700 hover:underline shrink-0">View Live Site →</a>
+                <div className="flex items-center gap-3">
+                    <a href="/" target="_blank" rel="noreferrer" className="text-sm font-medium text-blue-700 hover:underline shrink-0">View Live Site →</a>
+                    <button onClick={logout} className="text-sm font-medium text-slate-500 hover:text-red-600 transition-colors border border-slate-200 rounded-lg px-3 py-1.5 hover:border-red-200">Logout</button>
+                </div>
             </div>
+
 
             {/* Tabs */}
             <div className="flex gap-1 p-1 rounded-xl bg-slate-100 w-fit">
