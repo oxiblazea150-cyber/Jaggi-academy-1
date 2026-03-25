@@ -311,7 +311,7 @@ export default function AdminDashboard() {
                 <section className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
                     <div className="p-6 border-b border-slate-100">
                         <h2 className="font-semibold text-slate-800 mb-5">Add New Class</h2>
-                        <form onSubmit={addTime} className="grid grid-cols-2 sm:grid-cols-5 gap-3 items-end">
+                        <form onSubmit={addTime} className="grid grid-cols-1 sm:grid-cols-5 gap-3 items-end">
                             {/* Batch */}
                             <div>
                                 <label className="text-xs font-semibold text-slate-500 mb-1 block">Batch</label>

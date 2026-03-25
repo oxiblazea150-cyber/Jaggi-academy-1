@@ -119,7 +119,7 @@ export default async function Home() {
         <div className="absolute inset-0 opacity-25" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")", backgroundSize: '200px' }} />
 
         <div className="relative max-w-7xl mx-auto grid lg:grid-cols-[1fr_400px] gap-12 items-center">
-          <div>
+          <div className="text-center lg:text-left flex flex-col items-center lg:items-start">
             <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold mb-8" style={{ background: 'rgba(212,130,10,0.2)', color: 'var(--amber-light)', border: '1px solid rgba(212,130,10,0.3)' }}>
               <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--amber-light)' }} />
               Admissions Open · Batch 2025–26
@@ -129,14 +129,14 @@ export default async function Home() {
               <em className="not-italic" style={{ color: 'var(--amber-light)' }}>Conquer your</em><br />
               Exams.
             </h1>
-            <p className="text-lg leading-relaxed max-w-xl mb-10" style={{ color: 'rgba(255,255,255,0.72)' }}>
+            <p className="text-lg leading-relaxed max-w-xl mb-10 mx-auto lg:mx-0" style={{ color: 'rgba(255,255,255,0.72)' }}>
               Elite, focused coaching for JEE, NEET, Class 11 & 12 — by faculty who have produced hundreds of top rankers. Serious about your results? Let's talk.
             </p>
             <a href={WHATSAPP} target="_blank" rel="noreferrer"
-              className="wa-pulse inline-flex items-center gap-3 text-white font-bold text-lg rounded-2xl px-8 py-5 transition-transform hover:scale-105 active:scale-95"
+              className="wa-pulse inline-flex items-center justify-center gap-3 text-white font-bold text-lg rounded-2xl px-6 sm:px-8 py-5 transition-transform hover:scale-105 active:scale-95 w-full sm:w-auto"
               style={{ background: 'var(--whatsapp)', boxShadow: '0 8px 32px rgba(26,122,71,0.45)' }}>
               {WA_ICON}
-              Chat on WhatsApp · Book a Free Trial
+              <span>Chat on WhatsApp<span className="hidden sm:inline"> · Book a Free Trial</span></span>
             </a>
             <p className="mt-4 text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>No forms. No calls. Just a quick chat.</p>
           </div>
